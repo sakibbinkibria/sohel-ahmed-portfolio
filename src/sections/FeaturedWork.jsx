@@ -75,7 +75,7 @@ export default function FeaturedWork() {
         ))}
 
         <div className="view-more">
-          <a href="#">View More →</a>
+          <span>View More →</span>
         </div>
       </section>
 
