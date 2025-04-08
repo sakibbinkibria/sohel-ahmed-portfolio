@@ -1,0 +1,150 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    position: relative;
+    background: #111;
+    width: 95%;
+    max-width: 1400px;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+  
+    /* Hover group */
+  }
+  
+  .slider-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-image {
+    width: auto;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    width: 100%;
+  }
+  
+  /* Close button styling */
+  .close-btn {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    font-size: 28px;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Arrows hidden by default */
+  .slick-prev,
+  .slick-next {
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .slick-prev:before,
+  .slick-next:before {
+    color: white;
+    font-size: 30px;
+  }
+  
+  /* Reveal close button and arrows on hover */
+  .modal-content:hover .close-btn,
+  .modal-content:hover .slick-prev,
+  .modal-content:hover .slick-next {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .modal-content {
+      width: 100%;
+      padding: 10px;
+      border-radius: 0;
+    }
+  
+    .slick-prev,
+    .slick-next {
+      background: none !important;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      top: 50%; /* Vertically center */
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+  
+    .slick-prev {
+      left: 10px;
+    }
+  
+    .slick-next {
+      right: 10px;
+    }
+  
+    .slick-prev:before,
+    .slick-next:before {
+      font-size: 24px;
+      color: white;
+    }
+  
+    .close-btn {
+      font-size: 22px; /* Smaller for mobile */
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+/* Default hidden */
+.close-btn,
+.slick-prev,
+.slick-next {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 5;
+}
+
+/* Desktop: show on hover */
+.modal-content:hover .close-btn,
+.modal-content:hover .slick-prev,
+.modal-content:hover .slick-next {
+  opacity: 1;
+}
+
+/* Mobile: show when .show-controls is active */
+@media (max-width: 768px) {
+  .modal-content:hover .close-btn,
+  .modal-content:hover .slick-prev,
+  .modal-content:hover .slick-next {
+    opacity: 0; /* disable hover on mobile */
+  }
+
+  .modal-content.show-controls .close-btn,
+  .modal-content.show-controls .slick-prev,
+  .modal-content.show-controls .slick-next {
+    opacity: 1;
+  }
+}
+
+  
+  
+  
+  

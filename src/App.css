@@ -1,3 +1,7 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+
 .home-wrapper {
   position: relative;
   height: 100vh;
@@ -61,4 +65,8 @@
   font-size: 1.25rem;
   opacity: 0.9;
   font-weight: 300;
+}
+
+html {
+  scroll-behavior: smooth;
 }

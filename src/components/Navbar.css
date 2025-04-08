@@ -112,5 +112,26 @@
 
   .hamburger {
     display: block;
+    font-size: 1rem;
   }
+  .navbar-logo {
+    font-weight: 400;
+    font-size: 1.2rem;
+  }
+  
+  .navbar-links span,
+  .side-menu-content span {
+    font-weight: 300;
+    font-size: 0.95rem;
+  }
+  
+  .navbar-icons a,
+  .side-icons a {
+    font-size: 1rem;
+  }
+  
+  .close-icon {
+    font-size: 1rem;
+  }  
+  
 }
