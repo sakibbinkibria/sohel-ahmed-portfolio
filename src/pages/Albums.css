@@ -1,0 +1,40 @@
+.albums-section {
+    padding: 4rem 2rem;
+    background-color: #111;
+  }
+  
+  .albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .albums-polaroid {
+    background: #fff;
+    padding: 10px 10px 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .albums-polaroid:hover {
+    transform: translateY(-5px);
+  }
+  
+  .albums-polaroid-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .albums-polaroid-caption {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #333;
+  }
+  

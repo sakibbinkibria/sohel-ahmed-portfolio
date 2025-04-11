@@ -47,10 +47,12 @@
   }
   
   .gallery-polaroid-caption {
-    font-family: "Dancing Script", cursive;
-    font-size: 20px;
-    margin-top: 10px;
+    font-family: "Italianno", cursive;
+    font-size: 32px;
+    margin-top: 12px;
     color: #333;
+    text-align: center;
+    letter-spacing: 1px;
   }
   
   /* Tablet: 2 per row */
@@ -71,7 +73,7 @@
     }
   
     .gallery-polaroid-caption {
-      font-size: 18px;
+      font-size: 26px;
     }
   }
   
