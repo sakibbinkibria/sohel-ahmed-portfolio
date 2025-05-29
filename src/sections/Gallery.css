@@ -14,7 +14,7 @@
   .gallery-heading {
     font-size: 36px;
     margin-bottom: 40px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Dream Caps W00 Regular', sans-serif;
   }
   
   .gallery-grid {
@@ -47,8 +47,9 @@
   }
   
   .gallery-polaroid-caption {
-    font-family: "Italianno", cursive;
-    font-size: 32px;
+    font-family: 'Dream Caps W00 Regular', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
     margin-top: 12px;
     color: #333;
     text-align: center;

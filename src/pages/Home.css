@@ -22,7 +22,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Dream Caps W00 Regular', serif;
   }
   
   .hero-content h1 {
@@ -33,7 +33,7 @@
   .hero-content p {
     font-size: 1.1rem;
     margin-bottom: 2rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Dream Caps W00 Regular', serif;
   }
   
   .hero-content button {

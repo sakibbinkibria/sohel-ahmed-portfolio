@@ -56,8 +56,9 @@
   }
   
   .caption {
-    font-family: 'Brush Script MT', cursive;
-    font-size: 1.2rem;
+    font-family: 'Dream Caps W00 Regular', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
     padding: 10px 0 5px;
     color: #111;
   }
