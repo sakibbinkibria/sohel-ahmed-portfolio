@@ -36,7 +36,7 @@ export default function FeaturedWork() {
               style={{ cursor: "pointer" }}
             >
               <img src={work.images?.[0]} alt={work.title} />
-              <div className="caption">{work.title}</div>
+              {/* <div className="caption">{work.title}</div> */}
             </div>
           </div>
         ))}

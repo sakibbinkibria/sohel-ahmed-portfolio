@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { db } from "../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import "./UploadPanel.css";
+import { useEffect } from "react";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useHistory } from "react-router-dom";
 
 export default function UploadPanel() {
   // Shared state
@@ -16,6 +20,18 @@ export default function UploadPanel() {
   const [featuredTitle, setFeaturedTitle] = useState("");
   const [featuredDescription, setFeaturedDescription] = useState("");
   const [featuredImages, setFeaturedImages] = useState([]);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        history.push("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [history]);
+
 
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
