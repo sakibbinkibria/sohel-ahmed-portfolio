@@ -9,12 +9,12 @@ import './Home.css'; // We'll add scroll snapping styles here
 const Home = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="snap-container">
         <Hero />
-        <FeaturedWork />
+        {/* <FeaturedWork />
         <Gallery />
-        <MyStory />
+        <MyStory /> */}
       </main>
     </>
   );

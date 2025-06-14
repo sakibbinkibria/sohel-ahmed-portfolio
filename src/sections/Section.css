@@ -1,49 +1,66 @@
-.hero-section {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
+.hero-grid-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.grid-background {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.grid-cell {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* optional */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+}
+
+.enter-button {
+  margin-top: 20px;
+  padding: 10px 25px;
+  border: 1.5px solid #ada692;
+  background: transparent;
+  color: #ada692;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.enter-button:hover {
+  background: #f2f2f2;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .grid-background {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 33.33vh);
   }
-  
-  .hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-  }
-  
-  .hero-title {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 0;
-    letter-spacing: 3px;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
-  }
-  
-  .section {
-    height: 100vh;
-    background-color: #111;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top: 1px solid #222;
-  }
-  
+}

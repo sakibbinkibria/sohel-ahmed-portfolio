@@ -2,7 +2,7 @@
     max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
-    background: #111;
+    background: #403018;
     border-radius: 12px;
     color: #fff;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
@@ -43,5 +43,64 @@
     font-size: 1rem;
     box-sizing: border-box;
   }
+
+  .grid-uploader {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .grid-upload-btn {
+    height: 60px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #666;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .grid-upload-btn:hover {
+    background: #444;
+  }
+
+  .grid-cell-block {
+    margin-bottom: 1rem;
+  }
+  
+  .grid-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.5rem;
+  }
+  
+  .grid-thumb-wrapper {
+    position: relative;
+  }
+  
+  .grid-thumb-wrapper img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border: 2px solid #444;
+    border-radius: 4px;
+  }
+  
+  .grid-thumb-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: white;
+    border: none;
+    font-size: 14px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  
   
   
