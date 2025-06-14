@@ -1,5 +1,5 @@
 // netlify/functions/deleteImage.js
-const { v2: cloudinary } = require("cloudinary");
+import cloudinary from "cloudinary";
 
 cloudinary.config({
   cloud_name: "YOUR_CLOUD_NAME",
