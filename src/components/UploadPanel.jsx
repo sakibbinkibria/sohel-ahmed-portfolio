@@ -13,7 +13,7 @@ const uploadToCloudinary = async (file) => {
   formData.append("upload_preset", "album photos");
 
   const res = await fetch(
-    "https://api.cloudinary.com/v1_1/dyrniubhl/image/upload",
+    "https://api.cloudinary.com/v1_1/CLOUDINARY_CLOUD_NAME/image/upload",
     {
       method: "POST",
       body: formData,
