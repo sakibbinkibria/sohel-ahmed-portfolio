@@ -41,11 +41,16 @@ const Hero = () => {
         getDoc(doc(db, "heroGrid", `cell${idx}`))
       );
       const docs = await Promise.all(promises);
-      const sets = docs.map((d) => (d.exists() ? d.data().images : []));
-      setImageSets(sets); // imageSets becomes state
+      const sets = docs.map((d) =>
+        d.exists()
+          ? d.data().images.map((imgObj) => imgObj.url)
+          : []
+      );
+      setImageSets(sets);
     };
     fetchGrid();
   }, []);
+  
 
   // Detect screen width on mount and resize
   useEffect(() => {
