@@ -5,7 +5,7 @@ export default function CloudinaryUploader({ onUpload }) {
   const openWidget = () => {
     window.cloudinary.openUploadWidget(
       {
-        cloudName: process.env.CLOUDINARY_CLOUD_NAME, // Replace with yours
+        cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME, // Replace with yours
         uploadPreset: "YOUR_UNSIGNED_UPLOAD_PRESET", // Replace with yours
         sources: ["local", "url", "camera"],
         multiple: true,
