@@ -1,10 +1,10 @@
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import './Section.css';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 
 const initialImageSets = [
   ['/album2-pic1.jpg', '/album1-pic2.jpg', '/album1-pic1.jpg'],
@@ -81,7 +81,7 @@ const Hero = () => {
   return (
     <section className="hero-grid-section" id="home">
       <div className="grid-background">
-        {imageSets.map((set, idx) => (
+        {imageSets?.length > 0 && imageSets.map((set, idx) => (
           <div className="grid-cell" key={idx}>
             <Slider
               {...sliderSettings}

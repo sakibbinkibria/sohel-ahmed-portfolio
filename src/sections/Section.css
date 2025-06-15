@@ -20,11 +20,26 @@
   height: 100%;
 }
 
+/* Ensure all Slick wrappers fill the grid cell */
+.grid-cell .slick-slider,
+.grid-cell .slick-list,
+.grid-cell .slick-track,
+.grid-cell .slick-slide,
+.grid-cell .slick-slide > div {
+  width: 100%;
+  height: 100%;
+  display: flex; /* Important: aligns single slide div to take full height */
+}
+
+/* Image fills container, crops from center */
 .grid-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }
+
 
 .hero-overlay {
   position: absolute;
