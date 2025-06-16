@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { useLocation } from 'react-router-dom';
 import './Section.css';
 
 // const initialImageSets = [
@@ -40,7 +41,25 @@ const Hero = () => {
     visibleCount === 3
       ? mobileIndexes.every((i) => loadedCells[i])
       : loadedCells.every(Boolean);
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === '/') {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [location.pathname]);
 
+  useEffect(() => {
+    const updateHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
 
   useEffect(() => {
@@ -74,41 +93,41 @@ const Hero = () => {
 
   useEffect(() => {
     if (!isAllLoaded) return; // Wait until all images have loaded
-  
+
     let slidSet = new Set();
-  
+
     const interval = setInterval(() => {
       const visibleIndexes = sliderRefs.current.slice(0, visibleCount);
-  
+
       if (slidSet.size === visibleIndexes.length) {
         slidSet.clear();
       }
-  
+
       const availableIndexes = visibleIndexes
         .map((_, idx) => idx)
         .filter((idx) => !slidSet.has(idx));
-  
+
       if (availableIndexes.length === 0) return;
-  
+
       const randomIdx = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
       const randomSlider = sliderRefs.current[randomIdx];
-  
+
       if (randomSlider) {
         randomSlider.slickNext();
         slidSet.add(randomIdx);
       }
     }, 1500);
-  
+
     return () => clearInterval(interval);
   }, [visibleCount, isAllLoaded]);
-  
+
   return (
     <section className={`hero-grid-section ${isAllLoaded ? 'fade-in' : ''}`} id="home">
       {!isAllLoaded && (
         <div className="hero-loader-screen">
           <div className="spinner-ring-wrapper">
             <div className="spinner-ring" />
-            <img src="/sa_logo.png" alt="Logo" className="loader-logo-inside" style={{width:'auto', height: '90px'}}/>
+            <img src="/sa_logo.png" alt="Logo" className="loader-logo-inside" style={{ width: 'auto', height: '90px' }} />
           </div>
         </div>
       )}
@@ -150,7 +169,7 @@ const Hero = () => {
       </div>
 
       <div className="hero-overlay">
-        <img src="/sa_logo.png" alt="Logo" className= 'center-logo' />
+        <img src="/sa_logo.png" alt="Logo" className='center-logo' />
         <button className="enter-button">Begin the journey</button>
       </div>
     </section>

@@ -1,3 +1,11 @@
+body.no-scroll {
+  overflow: hidden;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+}
+
+
 .hero-grid-section {
   position: relative;
   width: 100vw;
@@ -65,13 +73,20 @@
   margin-top: 20px;
   padding: 10px 25px;
   border: 2px solid #ada692;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.4);   /* dark gray @ 50 % opacity   */
   color: #ada692;
   font-size: 1.1rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
 }
+
+/* optional — keep the hover contrast strong */
+.enter-button:hover {
+  background: rgba(0, 0, 0, 0.7);   /* a bit less transparent on hover */
+  color: #f2f2f2;
+}
+
 
 @media (max-width: 768px) {
   .center-logo {
@@ -82,11 +97,6 @@
     padding: 5px 10px;
     font-size: 1rem;
   }
-}
-
-.enter-button:hover {
-  background: #f2f2f2;
-  color: #000;
 }
 
 @media (max-width: 768px) {
