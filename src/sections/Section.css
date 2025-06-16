@@ -133,8 +133,8 @@ body.no-scroll {
   border-radius: 50%;
   background: conic-gradient(#ada692 0deg 45deg, transparent 40deg 360deg);
   animation: spin 1s linear infinite;
-  mask-image: radial-gradient(closest-side, transparent 94%, black 95%);
-  -webkit-mask-image: radial-gradient(closest-side, transparent 94%, black 95%);
+  mask-image: radial-gradient(closest-side, transparent 96%, black 97%);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 96%, black 97%);
 
 }
 
