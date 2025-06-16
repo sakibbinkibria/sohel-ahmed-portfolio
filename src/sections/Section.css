@@ -1,7 +1,7 @@
 .hero-grid-section {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   overflow: hidden;
 }
 
@@ -92,7 +92,7 @@
 @media (max-width: 768px) {
   .grid-background {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 33.33vh);
+    grid-template-rows: repeat(3, calc(var(--vh, 1vh) * 33.33));
   }
 }
 
