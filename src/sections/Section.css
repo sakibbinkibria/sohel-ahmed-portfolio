@@ -56,16 +56,32 @@
   z-index: 2;
 }
 
+.center-logo {
+  height: 200px;
+  width: auto;
+}
+
 .enter-button {
   margin-top: 20px;
   padding: 10px 25px;
-  border: 1.5px solid #ada692;
+  border: 2px solid #ada692;
   background: transparent;
   color: #ada692;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
+}
+
+@media (max-width: 768px) {
+  .center-logo {
+    height: 120px;
+  }
+  .enter-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+  }
 }
 
 .enter-button:hover {
@@ -79,3 +95,51 @@
     grid-template-rows: repeat(3, 33.33vh);
   }
 }
+
+.hero-loader-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Wrap ring and logo in a relative container */
+.spinner-ring-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+/* Spinner ring itself rotates */
+.spinner-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 8px solid rgba(255, 255, 255, 0.15);
+  border-top: 8px solid #ada692;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Logo stays still in the center */
+.loader-logo-inside {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90px;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
