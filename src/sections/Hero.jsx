@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import './Section.css';
 
 // const initialImageSets = [
@@ -42,6 +42,7 @@ const Hero = () => {
       ? mobileIndexes.every((i) => loadedCells[i])
       : loadedCells.every(Boolean);
   const location = useLocation();
+  const history = useHistory();
   useEffect(() => {
     if (location.pathname === '/') {
       document.body.classList.add('no-scroll');
@@ -170,7 +171,9 @@ const Hero = () => {
 
       <div className="hero-overlay">
         <img src="/sa_logo.png" alt="Logo" className='center-logo' />
-        <button className="enter-button">Begin the journey</button>
+        <button className="enter-button" onClick={()=>{
+          history.push('/photography');
+        }}>Begin the journey</button>
       </div>
     </section>
 
