@@ -130,10 +130,12 @@ body.no-scroll {
   left: 0;
   width: 100%;
   height: 100%;
-  border: 3px solid rgba(255, 255, 255, 0.15);
-  border-top: 3px solid #ada692;
   border-radius: 50%;
+  background: conic-gradient(#ada692 0deg 45deg, transparent 40deg 360deg);
   animation: spin 1s linear infinite;
+  mask-image: radial-gradient(closest-side, transparent 94%, black 95%);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 94%, black 95%);
+
 }
 
 /* Logo stays still in the center */
