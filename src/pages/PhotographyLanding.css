@@ -16,9 +16,6 @@
   .landing-logo {
     height: 100px;
     width: auto;
-  }
-
-  img {
     filter: invert(94%) sepia(17%) saturate(528%) hue-rotate(170deg) brightness(93%) contrast(85%);
   }
   
