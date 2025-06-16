@@ -130,8 +130,8 @@ body.no-scroll {
   left: 0;
   width: 100%;
   height: 100%;
-  border: 8px solid rgba(255, 255, 255, 0.15);
-  border-top: 8px solid #ada692;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top: 3px solid #ada692;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
