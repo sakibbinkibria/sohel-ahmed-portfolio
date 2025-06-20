@@ -1,22 +1,61 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './PhotographyLanding.css'; // use this CSS file
+import Slider from 'react-slick';
+import Navbar from '../components/Navbar';
+import './PhotographyLanding.css';
 
-export default function PhotographyLanding() {
+function NextArrow(props) {
+  const { onClick } = props;
   return (
-    <div className="photography-landing">
-      <div className="logo-container">
-        <img src="/sa_logo.png" alt="Logo" className="landing-logo" />
-        <p className="photographer-name">Sohel Ahmed</p>
-      </div>
-
-      <nav className="nav-links">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/galleries" className="nav-link">Galleries</Link>
-        <Link to="/testimonials" className="nav-link">Testimonials</Link>
-        <Link to="/about" className="nav-link">About</Link>
-        <Link to="/contact" className="nav-link">Contact</Link>
-      </nav>
+    <div className="custom-arrow next-arrow" onClick={onClick}>
+      &#8250;
     </div>
   );
-};
+}
+
+function PrevArrow(props) {
+  const { onClick } = props;
+  return (
+    <div className="custom-arrow prev-arrow" onClick={onClick}>
+      &#8249;
+    </div>
+  );
+}
+
+
+export default function PhotographyLanding() {
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 1500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2400,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />
+  };
+  
+
+  const images = [
+    '/album2-pic1.jpg', '/album1-pic2.jpg', '/album1-pic1.jpg'
+  ];
+
+  return (
+    <div className="photography-landing">
+      <Navbar />
+      {/* Main Page Content Container */}
+      <div className="main-content">
+        <section className="slideshow-section">
+          <Slider {...sliderSettings}>
+            {images.map((src, index) => (
+              <div key={index} className="slide-wrapper">
+                <img src={src} alt={`Slide ${index + 1}`} className="slide-image" />
+              </div>
+            ))}
+          </Slider>
+        </section>
+        {/* Additional content can follow here */}
+      </div>
+    </div>
+  );
+}

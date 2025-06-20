@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../firebase/firebase";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDoc } from "firebase/firestore";
@@ -12,19 +12,27 @@ const uploadToCloudinary = async (file) => {
   formData.append("file", file);
   formData.append("upload_preset", "album photos");
 
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
-    {
+  try {
+    const res = await fetch("https://api.cloudinary.com/v1_1/dyrniubhl/image/upload", {
       method: "POST",
       body: formData,
-    }
-  );
+    });
 
-  const data = await res.json();
-  return {
-    url: data.secure_url,
-    public_id: data.public_id,
-  };
+    const data = await res.json();
+    console.log("Cloudinary response:", data); // 🔍 This shows the detailed error
+
+    if (!res.ok) {
+      throw new Error(data?.error?.message || "Upload failed");
+    }
+
+    return {
+      url: data.secure_url,
+      public_id: data.public_id,
+    };
+  } catch (err) {
+    console.error("Cloudinary Upload Error:", err.message);
+    throw err;
+  }
 };
 
 
@@ -33,6 +41,7 @@ export default function UploadPanel() {
   const [message, setMessage] = useState("");
   const [uploading, setUploading] = useState(false);
   const [cellUploading, setCellUploading] = useState(Array(9).fill(false));
+  const [featuredDocs, setFeaturedDocs] = useState([]);
   const fileInputs = useRef([]);
 
   /* redirect unauthenticated users */
@@ -48,8 +57,16 @@ export default function UploadPanel() {
       }
       setCellImages(newImages);
     };
-
+    const fetchFeatured = async () => {
+      const snapshot = await getDocs(collection(db, "featured"));
+      const items = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setFeaturedDocs(items);
+    };
     fetchCellImages();
+    fetchFeatured();
     return un;
   }, [history]);
 
@@ -79,21 +96,33 @@ export default function UploadPanel() {
   };
 
   const handleFeaturedUpload = async () => {
-    if (!featuredTitle || !featuredDescription || featuredImages.length === 0)
+    if (!featuredTitle || !featuredDescription || featuredImages.length === 0) {
       return setMessage("Give featured title, description & images");
+    }
     try {
       setUploading(true);
-      const urls = await Promise.all(featuredImages.map(uploadToCloudinary));
+      // Upload all featured images (using .file)
+      const urls = await Promise.all(
+        featuredImages.map(({ file }) => uploadToCloudinary(file))
+      );
       await addDoc(collection(db, "featured"), {
         title: featuredTitle,
         description: featuredDescription,
-        images: urls,
+        images: urls, // flat array of uploaded image objects
         createdAt: new Date(),
       });
       setMessage("Featured work uploaded!");
-      setFeaturedTitle(""); setFeaturedDescription(""); setFeaturedImages([]);
-    } catch { setMessage("Featured upload failed"); } finally { setUploading(false); }
+      setFeaturedTitle("");
+      setFeaturedDescription("");
+      setFeaturedImages([]);
+    } catch (err) {
+      console.error(err);
+      setMessage("Featured upload failed");
+    } finally {
+      setUploading(false);
+    }
   };
+
 
   /* ------------- Hero grid upload ------------- */
   const handleCellSelect = (idx) => fileInputs.current[idx].click();
@@ -135,7 +164,34 @@ export default function UploadPanel() {
     }
   };
 
+  const handleRemoveFeaturedImage = (imgToRemove) => {
+    setFeaturedImages((prev) =>
+      prev.filter((img) => img.url !== imgToRemove.url)
+    );
+  };
 
+  const handleDeleteFeatured = async (docId, image) => {
+    try {
+      await fetch("/.netlify/functions/deleteImage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ public_id: image.public_id }),
+      });
+  
+      const workRef = doc(db, "featured", docId);
+      const updatedDocs = featuredDocs.map(work => {
+        if (work.id !== docId) return work;
+        const newImgs = work.images.filter(i => i.public_id !== image.public_id);
+        return { ...work, images: newImgs };
+      });
+  
+      await setDoc(workRef, { ...updatedDocs.find(w => w.id === docId), images: updatedDocs.find(w => w.id === docId).images });
+      setFeaturedDocs(updatedDocs);
+    } catch (err) {
+      console.error("Failed to delete featured work image:", err);
+    }
+  };
+  
 
   return (
     <div className="upload-panel">
@@ -194,12 +250,46 @@ export default function UploadPanel() {
       <h2>Upload Featured Work</h2>
       <input type="text" placeholder="Featured Title" value={featuredTitle} onChange={(e) => setFeaturedTitle(e.target.value)} />
       <textarea placeholder="Featured Description" rows={4} value={featuredDescription} onChange={(e) => setFeaturedDescription(e.target.value)} />
-      <input type="file" multiple onChange={(e) => setFeaturedImages([...e.target.files])} />
+      <input
+        type="file"
+        multiple
+        onChange={async (e) => {
+          const files = [...e.target.files];
+          const previews = await Promise.all(files.map(async (file) => {
+            return {
+              url: URL.createObjectURL(file),
+              file,
+              public_id: null, // temporary for client-side deletion
+            };
+          }));
+          setFeaturedImages(previews);
+        }}
+      />
+      <div className="grid-thumbs">
+        {featuredImages.map((img, idx) => (
+          <div key={idx} className="grid-thumb-wrapper">
+            <img src={img.url} alt={`featured-${idx}`} />
+            <button onClick={() => handleRemoveFeaturedImage(img)}>×</button>
+          </div>
+        ))}
+      </div>
       <button onClick={handleFeaturedUpload} disabled={uploading}>
         {uploading ? "Uploading…" : "Upload Featured"}
       </button>
 
       {message && <p className="upload-message">{message}</p>}
+      <h2>Existing Featured Work</h2>
+      <div className="grid-uploader">
+        {featuredDocs.map((work) =>
+          work.images.map((img, idx) => (
+            <div key={`${work.id}-${idx}`} className="grid-thumb-wrapper">
+              <img src={img.url} alt={work.title} className="grid-thumb-preview" />
+              <button onClick={() => handleDeleteFeatured(work.id, img)} className="grid-thumb-remove">X</button>
+            </div>
+          ))
+        )}
+      </div>
+
     </div>
   );
 }

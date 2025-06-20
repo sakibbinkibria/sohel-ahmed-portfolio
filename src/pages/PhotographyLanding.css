@@ -8,49 +8,76 @@
     font-family: 'Georgia', serif;
   }
   
-  .logo-container {
-    text-align: center;
-    margin-bottom: 20px;
+  .main-content {
+    max-width: 1000px;
+    width: 100%;
+    padding: 0 20px;
+    margin: 20px auto;
   }
   
-  .landing-logo {
-    height: 100px;
-    width: auto;
-    filter: invert(94%) sepia(17%) saturate(528%) hue-rotate(170deg) brightness(93%) contrast(85%);
+  /* Slideshow styling */
+  .slideshow-section {
+    width: 100%;
+    max-height: 600px;
+    overflow: hidden;
+    margin-bottom: 40px;
   }
   
-  
-  .photographer-name {
-    font-family: 'Great Vibes', cursive; /* load this font */
-    font-size: 22px;
-    color: #5c4a36;
-    margin-top: 0px;
+  .slide-wrapper {
+    width: 100%;
+    height: 100%;
   }
   
-  .nav-links {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .slide-image {
+    width: 100%;
+    height: 640px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
   }
   
-  .nav-link {
-    font-size: 16px;
-    text-decoration: none;
-    color: #5c4a36;
-    transition: color 0.3s;
-  }
-  
-  .nav-link:hover {
-    color: #8a6d45;
-  }
-
+  /* Responsive tweaks */
   @media (max-width: 768px) {
-    .nav-links {
-        gap: 10px;
+    .slide-image {
+      height: auto;
+      max-height: 400px;
     }
-    .nav-link {
-        font-size: 12px;
-      }
+  }
+  
+
+  .custom-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #5c4a36;
+    font-size: 32px; /* ← Increase this */
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  
+  .custom-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+  
+  .next-arrow {
+    right: 10px;
+  }
+  
+  .prev-arrow {
+    left: 10px;
+  }
+  
+  /* Ensure .slide-wrapper is relative so arrows position correctly */
+  .slide-wrapper {
+    position: relative;
   }
   

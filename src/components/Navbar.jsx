@@ -1,61 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 import './Navbar.css';
-import { FaInstagram, FaFacebookF, FaBars, FaTimes } from 'react-icons/fa';
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-      setMenuOpen(false);
-    }
-  };
 
   return (
     <>
-      <nav className="navbar">
-        <div className="navbar-left">
-          <span className="navbar-logo" onClick={() => scrollToSection('home')}>
-            Sohel Ahmed
-          </span>
-        </div>
+      <div className="logo-container">
+        <img src="/sa_logo.png" alt="Logo" className="landing-logo" />
+        <p className="photographer-name">Sohel Ahmed</p>
+      </div>
 
-        <div className="navbar-links">
-          <span onClick={() => scrollToSection('featured')}>Featured Work</span>
-          <span onClick={() => scrollToSection('gallery')}>Gallery</span>
-          <span onClick={() => scrollToSection('story')}>My Story</span>
-        </div>
-
-        <div className="navbar-icons">
-          <a href="https://www.instagram.com/sohel.ahmed.stories/" target="_blank" rel="noreferrer">
-            <FaInstagram />
-          </a>
-          <a href="https://www.facebook.com/SohelAhmed47" target="_blank" rel="noreferrer">
-            <FaFacebookF />
-          </a>
-        </div>
-
-        <div className="hamburger" onClick={() => setMenuOpen(true)}>
-          <FaBars />
-        </div>
+      <nav className="nav-links">
+        <Link to="/photography" className="nav-link">Home</Link>
+        <Link to="/gallery" className="nav-link">Galleries</Link>
+        <Link to="/testimonials" className="nav-link">Testimonials</Link>
+        <Link to="/about" className="nav-link">About</Link>
+        <Link to="/contact" className="nav-link">Contact</Link>
       </nav>
-
-      {menuOpen && (
-        <div className="side-menu" onClick={() => setMenuOpen(false)}>
-          <div className="side-menu-content" onClick={(e) => e.stopPropagation()}>
-            <FaTimes className="close-icon" onClick={() => setMenuOpen(false)} />
-            <span onClick={() => scrollToSection('featured')}>Featured Work</span>
-            <span onClick={() => scrollToSection('gallery')}>Gallery</span>
-            <span onClick={() => scrollToSection('story')}>My Story</span>
-            <div className="side-icons">
-              <a href="https://www.instagram.com/sohel.ahmed.stories/" target="_blank" rel="noreferrer"><FaInstagram /></a>
-              <a href="https://www.facebook.com/SohelAhmed47" target="_blank" rel="noreferrer"><FaFacebookF /></a>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
