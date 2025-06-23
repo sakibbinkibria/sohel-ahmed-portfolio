@@ -1,6 +1,6 @@
-.gallery-section {
+/* .gallery-section {
     padding: 10px 20px 50px;
-    background-color: #111;
+    background-color: #403018;
     color: white;
     text-align: center;
   }
@@ -40,10 +40,11 @@
   }
   
   .gallery-polaroid-img {
-    width: 100%;
-    height: auto;
+    width: 400px;
+    height: 500px;
     border-radius: 8px;
     display: block;
+    object-fit: cover;
   }
   
   .gallery-polaroid-caption {
@@ -76,5 +77,10 @@
     .gallery-polaroid-caption {
       font-size: 26px;
     }
+
+    .gallery-polaroid-img {
+      width: 300px;
+      height: 375px;
+    }
   }
-  
+   */

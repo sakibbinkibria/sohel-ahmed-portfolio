@@ -6,6 +6,13 @@
     align-items: center;
     padding-top: 20px;
     font-family: 'Georgia', serif;
+    overflow-y: auto;
+    color: #5c4a36;
+  }
+
+  .paragraph-1 {
+    font-size: 28px;
+    font-family: 'Georgia', serif;
   }
   
   .main-content {
@@ -18,19 +25,18 @@
   /* Slideshow styling */
   .slideshow-section {
     width: 100%;
-    max-height: 600px;
-    overflow: hidden;
     margin-bottom: 40px;
   }
   
   .slide-wrapper {
+    position: relative;
     width: 100%;
     height: 100%;
   }
   
   .slide-image {
     width: 100%;
-    height: 640px;
+    height: auto;
     object-fit: cover;
     object-position: center;
     display: block;
@@ -75,9 +81,13 @@
   .prev-arrow {
     left: 10px;
   }
-  
-  /* Ensure .slide-wrapper is relative so arrows position correctly */
-  .slide-wrapper {
-    position: relative;
+
+  .loading-spinner {
+    text-align: center;
+    font-size: 18px;
+    color: #5c4a36;
+    padding: 40px;
+    font-style: italic;
   }
+  
   

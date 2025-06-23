@@ -6,19 +6,22 @@ import UploadPanel from "./components/UploadPanel";
 import Gallery from "./pages/Gallery";
 import Login from "./pages/Login";
 import PhotographyLanding from "./pages/PhotographyLanding";
+import { AppDataProvider } from './context/AppDataContext';
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/upload" component={UploadPanel} />
-        <Route path="/login" component={Login} />
-        <Route exact path="/" component={Hero} />
-        <Route exact path="/home" component={Home} />
-        <Route path="/photography" component={PhotographyLanding} />
-        <Route path="/gallery" component={Gallery} />
-      </Switch>
-    </Router>
+    <AppDataProvider>
+      <Router>
+        <Switch>
+          <Route path="/upload" component={UploadPanel} />
+          <Route path="/login" component={Login} />
+          <Route exact path="/" component={Hero} />
+          <Route exact path="/home" component={Home} />
+          <Route path="/photography" component={PhotographyLanding} />
+          <Route path="/gallery" component={Gallery} />
+        </Switch>
+      </Router>
+    </AppDataProvider>
   );
 }
 

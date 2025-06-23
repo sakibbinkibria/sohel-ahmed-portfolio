@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../firebase/firebase";
-import { collection, doc, setDoc, addDoc, getDocs } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDoc } from "firebase/firestore";
@@ -42,8 +42,22 @@ export default function UploadPanel() {
   const [uploading, setUploading] = useState(false);
   const [cellUploading, setCellUploading] = useState(Array(9).fill(false));
   const [featuredDocs, setFeaturedDocs] = useState([]);
+  const [deleting, setDeleting] = useState(false);
   const fileInputs = useRef([]);
 
+  const fetchFeatured = async () => {
+    const docRef = doc(db, "featured", "main");
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      setFeaturedDocs(data.images || []);
+      setFeaturedDescription(data.description || "");
+    } else {
+      setFeaturedDocs([]);
+      setFeaturedDescription("");
+    }
+  };
+  
   /* redirect unauthenticated users */
   useEffect(() => {
     const un = onAuthStateChanged(auth, (u) => !u && history.push("/login"));
@@ -57,14 +71,7 @@ export default function UploadPanel() {
       }
       setCellImages(newImages);
     };
-    const fetchFeatured = async () => {
-      const snapshot = await getDocs(collection(db, "featured"));
-      const items = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setFeaturedDocs(items);
-    };
+
     fetchCellImages();
     fetchFeatured();
     return un;
@@ -74,7 +81,6 @@ export default function UploadPanel() {
   /* ------------- Gallery & Featured upload (unchanged) ------------- */
   const [galleryTitle, setGalleryTitle] = useState("");
   const [galleryImages, setGalleryImages] = useState([]);
-  const [featuredTitle, setFeaturedTitle] = useState("");
   const [featuredDescription, setFeaturedDescription] = useState("");
   const [featuredImages, setFeaturedImages] = useState([]);
   const [cellImages, setCellImages] = useState(Array(9).fill([]));
@@ -96,25 +102,30 @@ export default function UploadPanel() {
   };
 
   const handleFeaturedUpload = async () => {
-    if (!featuredTitle || !featuredDescription || featuredImages.length === 0) {
-      return setMessage("Give featured title, description & images");
+    if (featuredImages.length === 0) {
+      return setMessage("Please select featured images to upload");
     }
     try {
       setUploading(true);
-      // Upload all featured images (using .file)
-      const urls = await Promise.all(
+      const uploads = await Promise.all(
         featuredImages.map(({ file }) => uploadToCloudinary(file))
       );
-      await addDoc(collection(db, "featured"), {
-        title: featuredTitle,
+
+      const docRef = doc(db, "featured", "main"); // single doc called 'main'
+      const snap = await getDoc(docRef);
+      const existingImages = snap.exists() ? snap.data().images || [] : [];
+
+      const newImages = [...existingImages, ...uploads];
+
+      await setDoc(docRef, {
+        images: newImages,
         description: featuredDescription,
-        images: urls, // flat array of uploaded image objects
-        createdAt: new Date(),
       });
-      setMessage("Featured work uploaded!");
-      setFeaturedTitle("");
+      
+      setMessage("Featured images uploaded!");
       setFeaturedDescription("");
       setFeaturedImages([]);
+      fetchFeatured(); // refresh after upload
     } catch (err) {
       console.error(err);
       setMessage("Featured upload failed");
@@ -122,6 +133,7 @@ export default function UploadPanel() {
       setUploading(false);
     }
   };
+
 
 
   /* ------------- Hero grid upload ------------- */
@@ -170,28 +182,28 @@ export default function UploadPanel() {
     );
   };
 
-  const handleDeleteFeatured = async (docId, image) => {
+  const handleDeleteFeatured = async (imageToDelete) => {
+    setDeleting(true);
     try {
+      // 1. Delete from Cloudinary
       await fetch("/.netlify/functions/deleteImage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ public_id: image.public_id }),
+        body: JSON.stringify({ public_id: imageToDelete.public_id }),
       });
-  
-      const workRef = doc(db, "featured", docId);
-      const updatedDocs = featuredDocs.map(work => {
-        if (work.id !== docId) return work;
-        const newImgs = work.images.filter(i => i.public_id !== image.public_id);
-        return { ...work, images: newImgs };
-      });
-  
-      await setDoc(workRef, { ...updatedDocs.find(w => w.id === docId), images: updatedDocs.find(w => w.id === docId).images });
-      setFeaturedDocs(updatedDocs);
+
+      // 2. Update Firestore document
+      const updated = featuredDocs.filter(img => img.public_id !== imageToDelete.public_id);
+      await setDoc(doc(db, "featured", "main"), { images: updated });
+
+      setFeaturedDocs(updated);
     } catch (err) {
-      console.error("Failed to delete featured work image:", err);
+      console.error("Failed to delete featured image:", err);
+    } finally {
+      setDeleting(false);
     }
   };
-  
+
 
   return (
     <div className="upload-panel">
@@ -248,7 +260,6 @@ export default function UploadPanel() {
 
       {/* ---------- existing Featured Work uploader ---------- */}
       <h2>Upload Featured Work</h2>
-      <input type="text" placeholder="Featured Title" value={featuredTitle} onChange={(e) => setFeaturedTitle(e.target.value)} />
       <textarea placeholder="Featured Description" rows={4} value={featuredDescription} onChange={(e) => setFeaturedDescription(e.target.value)} />
       <input
         type="file"
@@ -278,17 +289,24 @@ export default function UploadPanel() {
       </button>
 
       {message && <p className="upload-message">{message}</p>}
-      <h2>Existing Featured Work</h2>
+      <h2>Featured Work Images</h2>
       <div className="grid-uploader">
-        {featuredDocs.map((work) =>
-          work.images.map((img, idx) => (
-            <div key={`${work.id}-${idx}`} className="grid-thumb-wrapper">
-              <img src={img.url} alt={work.title} className="grid-thumb-preview" />
-              <button onClick={() => handleDeleteFeatured(work.id, img)} className="grid-thumb-remove">X</button>
-            </div>
-          ))
-        )}
+        {featuredDocs.map((img, idx) => (
+          <div key={idx} className="grid-thumb-wrapper">
+            <img src={img.url} alt={`featured-${idx}`} className="grid-thumb-preview" />
+            {!deleting && (
+              <button
+                onClick={() => handleDeleteFeatured(img)}
+                className="grid-thumb-remove"
+              >
+                X
+              </button>
+            )}
+            {deleting && <span>Deleting Image...</span>}
+          </div>
+        ))}
       </div>
+
 
     </div>
   );

@@ -2,10 +2,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useLocation, useHistory } from 'react-router-dom';
 import './Section.css';
+import { useAppData } from '../context/AppDataContext';
 
 // const initialImageSets = [
 //   ['/album2-pic1.jpg', '/album1-pic2.jpg', '/album1-pic1.jpg'],
@@ -33,6 +34,7 @@ const sliderSettings = {
 
 const Hero = () => {
   const sliderRefs = useRef([]);
+  const { featuredImages, setFeaturedImages } = useAppData();
   const [visibleCount, setVisibleCount] = useState(9); // default: desktop (3x3)
   const [imageSets, setImageSets] = useState([]); // default images
   const [loadedCells, setLoadedCells] = useState(Array(9).fill(false));
@@ -47,6 +49,9 @@ const Hero = () => {
     if (location.pathname === '/') {
       document.body.classList.add('no-scroll');
     } else {
+      document.body.classList.remove('no-scroll');
+    }
+    return () => {
       document.body.classList.remove('no-scroll');
     }
   }, [location.pathname]);
@@ -122,6 +127,34 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [visibleCount, isAllLoaded]);
 
+  useEffect(() => {
+    if (!isAllLoaded || featuredImages?.length > 0) return;
+
+    // Fetch and preload images from 'featured' collection
+    const preloadFeaturedImages = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "featured"));
+        const doc = snapshot.docs[0];
+        if (doc?.exists()) {
+          const items = doc.data().images || [];
+          const preloadedImages = items.map((img) => {
+            const imageObj = new Image();
+            imageObj.src = img.url;
+            return {
+              ...img,
+              preloaded: imageObj,
+            };
+          });
+          setFeaturedImages(preloadedImages);
+        }
+      } catch (error) {
+        console.error("Failed to preload featured images:", error);
+      }
+    };
+
+    preloadFeaturedImages();
+  }, [isAllLoaded, setFeaturedImages, featuredImages?.length]);
+
   return (
     <section className={`hero-grid-section ${isAllLoaded ? 'fade-in' : ''}`} id="home">
       {!isAllLoaded && (
@@ -171,7 +204,7 @@ const Hero = () => {
 
       <div className="hero-overlay">
         <img src="/sa_logo.png" alt="Logo" className='center-logo' />
-        <button className="enter-button" onClick={()=>{
+        <button className="enter-button" onClick={() => {
           history.push('/photography');
         }}>Begin the journey</button>
       </div>
