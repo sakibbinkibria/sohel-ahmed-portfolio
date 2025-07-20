@@ -161,7 +161,7 @@ const Hero = () => {
         <div className="hero-loader-screen">
           <div className="spinner-ring-wrapper">
             <div className="spinner-ring" />
-            <img src="/logo_updated.png" alt="Logo" className="loader-logo-inside" style={{ width: 'auto', height: '90px' }} />
+            <img src="/sa_logo.png" alt="Logo" className="loader-logo-inside" style={{ width: 'auto', height: '90px' }} />
           </div>
         </div>
       )}
