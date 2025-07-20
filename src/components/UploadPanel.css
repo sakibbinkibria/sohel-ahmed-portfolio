@@ -113,4 +113,35 @@
   }
   
   
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .album-block {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    background: #f8f8f8;
+    text-align: center;
+  }
+  
+  .album-block p {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .album-block .grid-thumbs {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .album-block .grid-thumbs img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
   

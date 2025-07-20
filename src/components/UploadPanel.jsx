@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../firebase/firebase";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDoc } from "firebase/firestore";
@@ -42,7 +42,12 @@ export default function UploadPanel() {
   const [uploading, setUploading] = useState(false);
   const [cellUploading, setCellUploading] = useState(Array(9).fill(false));
   const [featuredDocs, setFeaturedDocs] = useState([]);
+  const [albums, setAlbums] = useState([]);
+  const [albumDeletingId, setAlbumDeletingId] = useState(null);
+
   const [deleting, setDeleting] = useState(false);
+  const [galleryCategory, setGalleryCategory] = useState("Wedding");
+
   const fileInputs = useRef([]);
 
   const fetchFeatured = async () => {
@@ -57,7 +62,13 @@ export default function UploadPanel() {
       setFeaturedDescription("");
     }
   };
-  
+
+  const fetchAlbums = async () => {
+    const snap = await getDocs(collection(db, "albums"));
+    const docs = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setAlbums(docs);
+  };
+
   /* redirect unauthenticated users */
   useEffect(() => {
     const un = onAuthStateChanged(auth, (u) => !u && history.push("/login"));
@@ -74,6 +85,7 @@ export default function UploadPanel() {
 
     fetchCellImages();
     fetchFeatured();
+    fetchAlbums();
     return un;
   }, [history]);
 
@@ -87,19 +99,31 @@ export default function UploadPanel() {
 
 
   const handleGalleryUpload = async () => {
-    if (!galleryTitle || galleryImages.length === 0) return setMessage("Give gallery title & images");
+    if (!galleryTitle || galleryImages.length === 0) {
+      return setMessage(`Give gallery title & images`);
+    }
     try {
       setUploading(true);
       const urls = await Promise.all(galleryImages.map(uploadToCloudinary));
       await addDoc(collection(db, "albums"), {
         title: galleryTitle,
         images: urls,
+        category: galleryCategory,
         createdAt: new Date(),
       });
-      setMessage("Gallery uploaded!");
-      setGalleryTitle(""); setGalleryImages([]);
-    } catch { setMessage("Gallery upload failed"); } finally { setUploading(false); }
+      alert("Album uploaded successfully!");
+      fetchAlbums();
+      setGalleryTitle("");
+      setGalleryImages([]);
+    }catch (err) {
+      console.error(err);
+      alert("Failed to upload album. Please try again.");
+    } finally {
+      setUploading(false);
+    }
   };
+
+
 
   const handleFeaturedUpload = async () => {
     if (featuredImages.length === 0) {
@@ -121,7 +145,7 @@ export default function UploadPanel() {
         images: newImages,
         description: featuredDescription,
       });
-      
+
       setMessage("Featured images uploaded!");
       setFeaturedDescription("");
       setFeaturedImages([]);
@@ -180,6 +204,27 @@ export default function UploadPanel() {
     setFeaturedImages((prev) =>
       prev.filter((img) => img.url !== imgToRemove.url)
     );
+  };
+
+  const handleDeleteAlbum = async (album) => {
+    setAlbumDeletingId(album.id);
+    try {
+      // 1. Delete each image from Cloudinary
+      await Promise.all(album.images.map(img =>
+        fetch("/.netlify/functions/deleteImage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_id: img.public_id }),
+        })
+      ));
+
+      await deleteDoc(doc(db, "albums", album.id));
+      setAlbums((prev) => prev.filter((a) => a.id !== album.id));
+    } catch (err) {
+      console.error("Failed to delete album:", err);
+    } finally {
+      setAlbumDeletingId(null);
+    }
   };
 
   const handleDeleteFeatured = async (imageToDelete) => {
@@ -249,14 +294,47 @@ export default function UploadPanel() {
       <hr />
 
       {/* ---------- existing Gallery uploader ---------- */}
-      <h2>Upload to Gallery</h2>
-      <input type="text" placeholder="Gallery Title" value={galleryTitle} onChange={(e) => setGalleryTitle(e.target.value)} />
+      <h2>Upload New Album</h2>
+      <input
+        type="text"
+        placeholder="Album Title"
+        value={galleryTitle}
+        onChange={(e) => setGalleryTitle(e.target.value)}
+      />
+      <select value={galleryCategory} onChange={(e) => setGalleryCategory(e.target.value)}>
+        <option value="Wedding">Wedding</option>
+        <option value="Fashion">Fashion</option>
+      </select>
       <input type="file" multiple onChange={(e) => setGalleryImages([...e.target.files])} />
       <button onClick={handleGalleryUpload} disabled={uploading}>
-        {uploading ? "Uploading…" : "Upload Gallery"}
+        {`${uploading ? "Uploading…" : "Upload Album"}`}
       </button>
 
       <hr />
+
+      <br />
+      <hr />
+      <h2>Uploaded Albums</h2>
+      <div className="album-grid">
+        {albums.map((album) => (
+          <div key={album.id} className="album-block">
+            <p>{album.title}</p>
+            <div className="grid-thumbs">
+              {album.images.map((img, idx) => (
+                <img key={idx} src={img.url} alt={`thumb-${idx}`} />
+              ))}
+              {album.images.length > 3 && <span>+{album.images.length - 3} more</span>}
+            </div>
+            <button
+              onClick={() => handleDeleteAlbum(album)}
+              disabled={albumDeletingId === album.id}
+            >
+              {albumDeletingId === album.id ? "Deleting…" : "Delete Album"}
+            </button>
+          </div>
+        ))}
+      </div>
+      <br />
 
       {/* ---------- existing Featured Work uploader ---------- */}
       <h2>Upload Featured Work</h2>

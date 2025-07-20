@@ -6,6 +6,8 @@ import UploadPanel from "./components/UploadPanel";
 import Gallery from "./pages/Gallery";
 import Login from "./pages/Login";
 import PhotographyLanding from "./pages/PhotographyLanding";
+import AlbumGrid from "./components/AlbumGrid";
+import AlbumView from "./components/AlbumView";
 import { AppDataProvider } from './context/AppDataContext';
 
 function App() {
@@ -19,6 +21,9 @@ function App() {
           <Route exact path="/home" component={Home} />
           <Route path="/photography" component={PhotographyLanding} />
           <Route path="/gallery" component={Gallery} />
+          <Route path="/albums/wedding" component={() => <AlbumGrid category="Wedding" />} />
+          <Route path="/albums/fashion" component={() => <AlbumGrid category="Fashion" />} />
+          <Route path="/album/:id" component={AlbumView} />
         </Switch>
       </Router>
     </AppDataProvider>
