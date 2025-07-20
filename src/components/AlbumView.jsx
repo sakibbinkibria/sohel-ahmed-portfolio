@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import "./AlbumView.css";
+import Navbar from "./Navbar";
 
 export default function AlbumView() {
     const { id } = useParams();
@@ -33,6 +34,7 @@ export default function AlbumView() {
 
     return (
         <div className="album-view-landing">
+            <Navbar />
             <h2 className="album-title-heading">{album.title}</h2>
             <div className="album-images-grid">
                 {album.images.map((img, idx) => (
