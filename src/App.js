@@ -9,6 +9,8 @@ import PhotographyLanding from "./pages/PhotographyLanding";
 import AlbumGrid from "./components/AlbumGrid";
 import AlbumView from "./components/AlbumView";
 import { AppDataProvider } from './context/AppDataContext';
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -16,14 +18,16 @@ function App() {
       <Router>
         <Switch>
           <Route path="/upload" component={UploadPanel} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} /> 
           <Route exact path="/" component={Hero} />
           <Route exact path="/home" component={Home} />
           <Route path="/photography" component={PhotographyLanding} />
           <Route path="/gallery" component={Gallery} />
-          <Route path="/albums/wedding" component={() => <AlbumGrid category="Wedding" />} />
-          <Route path="/albums/fashion" component={() => <AlbumGrid category="Fashion" />} />
+          <Route path="/wedding" component={() => <AlbumGrid category="Wedding" />} />
+          <Route path="/fashion" component={() => <AlbumGrid category="Fashion" />} />
           <Route path="/album/:id" component={AlbumView} />
+          <Route path="/about" component={About} />
+          <Route path="/contact" component={Contact} />
         </Switch>
       </Router>
     </AppDataProvider>

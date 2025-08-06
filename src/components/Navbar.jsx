@@ -1,8 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import './Navbar.css';
 
 const Navbar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
@@ -12,11 +15,12 @@ const Navbar = () => {
       </div>
 
       <nav className="nav-links">
-        <Link to="/photography" className="nav-link">Home</Link>
-        <Link to="/gallery" className="nav-link">Galleries</Link>
-        <Link to="/testimonials" className="nav-link">Testimonials</Link>
-        <Link to="/about" className="nav-link">About</Link>
-        <Link to="/contact" className="nav-link">Contact</Link>
+        <Link to="/photography" className={`nav-link ${isActive('/photography') ? 'active' : ''}`}>Home</Link>
+        <Link to="/wedding" className={`nav-link ${isActive('/wedding') ? 'active' : ''}`}>Weddings</Link>
+        <Link to="/fashion" className={`nav-link ${isActive('/fashion') ? 'active' : ''}`}>Fashion</Link>
+        <Link to="/achievements" className={`nav-link ${isActive('/achievements') ? 'active' : ''}`}>Achievements</Link>
+        <Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`}>About</Link>
+        <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`}>Contact</Link>
       </nav>
     </>
   );

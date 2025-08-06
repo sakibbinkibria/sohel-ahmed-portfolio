@@ -203,7 +203,7 @@ const Hero = () => {
       </div>
 
       <div className="hero-overlay">
-        <img src="/logo_updated.png" alt="Logo" className='center-logo' />
+        <img src="/sa_logo.png" alt="Logo" className='center-logo' />
         <button className="enter-button" onClick={() => {
           history.push('/photography');
         }}>Begin the journey</button>

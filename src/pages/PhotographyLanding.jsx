@@ -2,14 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import Navbar from '../components/Navbar';
 import { useAppData } from '../context/AppDataContext';
-import { db } from '../firebase/firebase'; // adjust path as needed
+import { db } from '../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import About from './About';
 import './PhotographyLanding.css';
+
+const isMobile = window.innerWidth <= 768;
 
 function NextArrow(props) {
   return (
     <div className="custom-arrow next-arrow" onClick={props.onClick}>
-      &#8250;
+      <ChevronRight size={isMobile ? 18 : 32} strokeWidth={1.8} />
     </div>
   );
 }
@@ -17,7 +21,7 @@ function NextArrow(props) {
 function PrevArrow(props) {
   return (
     <div className="custom-arrow prev-arrow" onClick={props.onClick}>
-      &#8249;
+      <ChevronLeft size={isMobile ? 18 : 32} strokeWidth={1.8} />
     </div>
   );
 }
@@ -48,11 +52,11 @@ export default function PhotographyLanding() {
           console.error('Error fetching featured images:', err);
         }
       };
-  
+
       fetchImages();
     }
   }, [contextImages, featuredImages?.length]);
-  
+
 
   // Track when all images are loaded
   useEffect(() => {
@@ -82,7 +86,7 @@ export default function PhotographyLanding() {
   const sliderSettings = {
     dots: true,
     infinite: featuredImages.length > 1, // 👈 only infinite if more than one
-    speed: 1500,
+    speed: 2500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: featuredImages.length > 1, // 👈 autoplay also disabled for single image
@@ -113,6 +117,13 @@ export default function PhotographyLanding() {
               ))}
             </Slider>
           )}
+
+          <div className='body-text'>
+            <span className='header-text'>Welcome</span>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <br />
+            <About/>
+          </div>
 
           {/* Preload images invisibly (before slider mounts) */}
           {!isLoading && !imagesLoaded &&

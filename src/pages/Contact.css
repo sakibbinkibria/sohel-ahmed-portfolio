@@ -1,0 +1,7 @@
+.contact-container {
+    background: #f5ebe1; /* elegant off-white/brownish tone */
+    min-height: 100vh;
+    font-family: 'Georgia', serif;
+    display: flex;
+  flex-direction: column;
+}
