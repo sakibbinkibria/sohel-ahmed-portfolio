@@ -35,12 +35,16 @@ export default function AlbumGrid({ category }) {
             className="album-thumbnail"
             onClick={() => handleAlbumClick(album.id)}
           >
-            <img
-              src={album.images[0]?.url}
-              alt={album.title}
-              className="album-cover"
-            />
-            <div className="album-title">{album.title}</div>
+            <div className="album-cover-wrapper">
+              <img
+                src={album.images[0]?.url}
+                alt={album.title}
+                className="album-cover"
+              />
+              <div className="album-overlay">
+                <div className="album-overlay-title">{album.title}</div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
